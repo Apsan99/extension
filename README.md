@@ -57,9 +57,10 @@ chrome-extension/
     ├── icon16.png
     ├── icon48.png
     └── icon128.png
+|___music/
+     |__calm-music.mp3
 
-
----
+-----------------------------------
 
 ## Troubleshooting
 
@@ -75,6 +76,6 @@ chrome-extension/
 - Create the icon files as described above
 - Reload the extension after adding icons
 
----
+------------------------------------------
 
 Made with love for Hack Club

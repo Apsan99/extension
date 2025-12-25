@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Focus Forest</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="logo">🌲</div>
+      <h1>Focus Forest</h1>
+      <div class="level-badge" id="level-badge">Lv. 1</div>
+    </header>
+
+    <!-- Tab Navigation -->
+    <nav class="tabs">
+      <button class="tab active" data-tab="stats">📊 Stats</button>
+      <button class="tab" data-tab="forest">🌳 Forest</button>
+      <button class="tab" data-tab="sites">🌐 Sites</button>
+      <button class="tab" data-tab="settings">⚙️ Settings</button>
+    </nav>
+
+    <!-- Stats Tab -->
+    <section class="tab-content active" id="stats-tab">
+      <div class="stats-grid">
+        <div class="stat-card today">
+          <div class="stat-icon">🌱</div>
+          <div class="stat-value" id="today-time">0:00</div>
+          <div class="stat-label">Today's Focus</div>
+        </div>
+        <div class="stat-card lifetime">
+          <div class="stat-icon">🌲</div>
+          <div class="stat-value" id="lifetime-time">0:00</div>
+          <div class="stat-label">Lifetime Focus</div>
+        </div>
+        <div class="stat-card streak">
+          <div class="stat-icon">🔥</div>
+          <div class="stat-value" id="streak-count">0</div>
+          <div class="stat-label">Day Streak</div>
+        </div>
+        <div class="stat-card trees">
+          <div class="stat-icon">🌳</div>
+          <div class="stat-value" id="trees-grown">0</div>
+          <div class="stat-label">Trees Grown</div>
+        </div>
+      </div>
+
+      <!-- Badges Section -->
+      <div class="badges-section">
+        <h3>🏆 Badges</h3>
+        <div class="badges-grid" id="badges-grid">
+          <!-- Badges will be populated here -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Forest Tab -->
+    <section class="tab-content" id="forest-tab">
+      <div class="forest-preview">
+        <div class="forest-ground"></div>
+        <div class="forest-trees" id="forest-trees">
+          <!-- Trees will be populated here -->
+        </div>
+        <div class="forest-stats">
+          <span>🌳 Today: <strong id="forest-today-trees">0</strong></span>
+          <span>🌲 Lifetime: <strong id="forest-lifetime-trees">0</strong></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Sites Tab -->
+    <section class="tab-content" id="sites-tab">
+      <div class="sites-header">
+        <h3>Productive Sites</h3>
+        <p>Forest grows on these websites</p>
+      </div>
+      
+      <div class="add-site-form">
+        <input type="text" id="new-site-input" placeholder="e.g., notion.so">
+        <button id="add-site-btn">+ Add</button>
+      </div>
+      
+      <div class="sites-list" id="sites-list">
+        <!-- Sites will be populated here -->
+      </div>
+    </section>
+
+    <!-- Settings Tab -->
+    <section class="tab-content" id="settings-tab">
+      <div class="settings-list">
+        <div class="setting-item">
+          <div class="setting-info">
+            <span class="setting-icon">🎵</span>
+            <div>
+              <div class="setting-name">Nature Sounds</div>
+              <div class="setting-desc">Play ambient sounds while focusing</div>
+            </div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="sound-toggle">
+            <span class="slider"></span>
+          </label>
+        </div>
+        
+        <div class="setting-item">
+          <div class="setting-info">
+            <span class="setting-icon">🌲</span>
+            <div>
+              <div class="setting-name">Forest Overlay</div>
+              <div class="setting-desc">Show forest on productive sites</div>
+            </div>
+          </div>
+          <label class="toggle">
+            <input type="checkbox" id="overlay-toggle" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+      </div>
+      
+      <div class="danger-zone">
+        <button class="reset-btn" id="reset-daily">Reset Today's Forest</button>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <span>Made with 💚 for Hack Club</span>
+    </footer>
+  </div>
+
+
+  
+
+  <script src="popup.js"></script>
+</body>
+</html>

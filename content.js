@@ -12,13 +12,13 @@ let growthInterval = null;
 const TREE_TYPES = [
   { name: 'oak', color: '#2d5a27', darkColor: '#1e3d1a' },
   { name: 'pine', color: '#1a472a', darkColor: '#0f2d1a' },
-  { name: 'maple', color: '#8b4513', darkColor: '#5c2d0e' },             //color ideasss taken from Ai
+  { name: 'maple', color: '#8b4513', darkColor: '#5c2d0e' },
   { name: 'cherry', color: '#ffb7c5', darkColor: '#ff69b4' },
   { name: 'willow', color: '#90EE90', darkColor: '#228B22' }
 ];
 
 // Initialize
-async function init() { 
+async function init() {
   const response = await chrome.runtime.sendMessage({
     action: 'checkProductive',
     url: window.location.href
@@ -46,7 +46,7 @@ function createForestOverlay() {
     <div class="ff-forest-ground"></div>
     <div class="ff-trees-container"></div>
     <div class="ff-stats-bar">
-      <div class="ff-timer">🌱 <span id="ff-timer-display">0:00</span></div> 
+      <div class="ff-timer">🌱 <span id="ff-timer-display">0:00</span></div>
       <div class="ff-tree-count">🌳 <span id="ff-tree-count">0</span> trees</div>
       <button class="ff-toggle-btn" id="ff-toggle-overlay">Hide</button>
     </div>
@@ -54,6 +54,9 @@ function createForestOverlay() {
   `;
   
   document.body.appendChild(forestContainer);
+  
+  // Make stats bar draggable
+  makeStatsDraggable();
   
   // Toggle visibility
   document.getElementById('ff-toggle-overlay').addEventListener('click', () => {
@@ -79,10 +82,77 @@ function createForestOverlay() {
   createParticles();
 }
 
+function makeStatsDraggable() {
+  const statsBar = document.querySelector('.ff-stats-bar');
+  if (!statsBar) return;
+  
+  let isDragging = false;
+  let startX, startY, initialX, initialY;
+  
+  // Load saved position
+  chrome.storage.local.get('statsBarPosition', (data) => {
+    if (data.statsBarPosition) {
+      statsBar.style.top = data.statsBarPosition.top;
+      statsBar.style.right = 'auto';
+      statsBar.style.left = data.statsBarPosition.left;
+    }
+  });
+  
+  statsBar.addEventListener('mousedown', (e) => {
+    if (e.target.tagName === 'BUTTON') return; // Don't drag when clicking buttons
+    isDragging = true;
+    statsBar.style.cursor = 'grabbing';
+    
+    const rect = statsBar.getBoundingClientRect();
+    startX = e.clientX;
+    startY = e.clientY;
+    initialX = rect.left;
+    initialY = rect.top;
+    
+    e.preventDefault();
+  });
+  
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    
+    const deltaX = e.clientX - startX;
+    const deltaY = e.clientY - startY;
+    
+    let newX = initialX + deltaX;
+    let newY = initialY + deltaY;
+    
+    // Keep within viewport
+    const maxX = window.innerWidth - statsBar.offsetWidth;
+    const maxY = window.innerHeight - statsBar.offsetHeight;
+    
+    newX = Math.max(0, Math.min(newX, maxX));
+    newY = Math.max(0, Math.min(newY, maxY));
+    
+    statsBar.style.right = 'auto';
+    statsBar.style.left = `${newX}px`;
+    statsBar.style.top = `${newY}px`;
+  });
+  
+  document.addEventListener('mouseup', () => {
+    if (isDragging) {
+      isDragging = false;
+      statsBar.style.cursor = 'grab';
+      
+      // Save position
+      chrome.storage.local.set({
+        statsBarPosition: {
+          left: statsBar.style.left,
+          top: statsBar.style.top
+        }
+      });
+    }
+  });
+}
+
 function createParticles() {
   const particlesContainer = document.querySelector('.ff-particles');
   if (!particlesContainer) return;
-// used emojiies instead of imagess   emoji shortcut: window button + dot
+  
   for (let i = 0; i < 15; i++) {
     const particle = document.createElement('div');
     particle.className = 'ff-particle';
@@ -215,10 +285,10 @@ async function saveFocusTime() {
   focusStartTime = Date.now();
 }
 
-
+// Save focus time before leaving
 window.addEventListener('beforeunload', saveFocusTime);
 
-
+// Periodic save every 30 seconds
 setInterval(() => {
   if (isTabActive && isProductive) {
     saveFocusTime();

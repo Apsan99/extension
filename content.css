@@ -176,12 +176,12 @@
 
 /* Stats Bar */
 .ff-stats-bar {
-  position: absolute;
+  position: fixed;
   top: 10px;
   right: 20px;
   display: flex;
   gap: 15px;
-  align-items: center;                       
+  align-items: center;
   background: rgba(45, 90, 39, 0.95);
   padding: 8px 16px;
   border-radius: 25px;
@@ -189,6 +189,9 @@
   pointer-events: auto;
   backdrop-filter: blur(10px);
   border: 2px solid rgba(255,255,255,0.2);
+  cursor: grab;
+  user-select: none;
+  z-index: 2147483647;
 }
 
 .ff-timer, .ff-tree-count {
@@ -276,4 +279,3 @@
     padding: 6px 12px;
   }
 }
-/* this took me sooo longgg  :(   */

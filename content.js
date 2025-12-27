@@ -36,7 +36,7 @@ async function init() {
 }
 
 function createForestOverlay() {
-  // Remove existing overlay if any
+ 
   const existing = document.getElementById('focus-forest-overlay');
   if (existing) existing.remove();
   
@@ -55,7 +55,7 @@ function createForestOverlay() {
   
   document.body.appendChild(forestContainer);
   
-  // Make stats bar draggable
+  // Make stats bar draggable New Feature!! 
   makeStatsDraggable();
   
   // Toggle visibility
@@ -121,7 +121,7 @@ function makeStatsDraggable() {
     let newX = initialX + deltaX;
     let newY = initialY + deltaY;
     
-    // Keep within viewport
+   
     const maxX = window.innerWidth - statsBar.offsetWidth;
     const maxY = window.innerHeight - statsBar.offsetHeight;
     
@@ -138,7 +138,7 @@ function makeStatsDraggable() {
       isDragging = false;
       statsBar.style.cursor = 'grab';
       
-      // Save position
+      // position save
       chrome.storage.local.set({
         statsBarPosition: {
           left: statsBar.style.left,
@@ -167,10 +167,10 @@ function createParticles() {
 function startFocusTracking() {
   focusStartTime = Date.now();
   
-  // Update timer every second
+  // Updating timer every second
   updateInterval = setInterval(updateTimer, 1000);
   
-  // Grow trees every 5 minutes (300 seconds)
+  //  IT Grow trees every 5 minutes (300 seconds)
   growthInterval = setInterval(checkTreeGrowth, 1000);
   
   // Track visibility

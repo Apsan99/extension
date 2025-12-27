@@ -58,10 +58,10 @@ async function loadStats() {
   document.getElementById('forest-today-trees').textContent = treesToday;
   document.getElementById('forest-lifetime-trees').textContent = treesLifetime;
   
-  // Load badges
+  // Loading badges
   loadBadges(stats.lifetime.badges);
   
-  // Load forest preview
+  // Loading forest preview
   loadForestPreview(treesToday);
 }
 

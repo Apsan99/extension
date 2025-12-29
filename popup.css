@@ -9,7 +9,7 @@ body {
   width: 340px;
   min-height: 480px;
   font-family: Georgia, 'Times New Roman', serif;
-  background: #1e3a1e;
+  background: #70ee70;
   color: #e8e8e8;
 }
 
@@ -25,8 +25,8 @@ body {
   align-items: center;
   gap: 10px;
   padding: 16px 18px;
-  background: #2a4a2a;
-  border-bottom: 1px solid #3a5a3a;
+  background: #64e264;
+  border-bottom: 1px solid #51df51;
 }
 
 .logo {
@@ -54,8 +54,8 @@ body {
 /* Tabs */
 .tabs {
   display: flex;
-  background: #1a321a;
-  border-bottom: 1px solid #2a4a2a;
+  background: #40f940;
+  border-bottom: 1px solid #59de59;
 }
 
 .tab {
@@ -73,7 +73,7 @@ body {
 
 .tab:hover {
   color: #a8c8a8;
-  background: #223822;
+  background: #6abd6a;
 }
 
 .tab.active {

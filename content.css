@@ -5,10 +5,10 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 160px;
+  height: 180px;
   pointer-events: none;
   z-index: 2147483646;
-  font-family: Georgia, 'Times New Roman', serif;
+  font-family: 'Segoe UI', system-ui, sans-serif;
 }
 
 #focus-forest-overlay * {
@@ -20,24 +20,35 @@
   bottom: 0;
   left: 0;
   right: 0;
-  height: 35px;
-  background: #3a5a3a;
-  border-top: 2px solid #4a6a4a;
+  height: 40px;
+  background: linear-gradient(to bottom, #4a7c59, #3d6b4f, #2d5a3f);
+  border-top: 3px solid #5d8a6b;
+}
+
+.ff-forest-ground::before {
+  content: '';
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+  height: 15px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 10'%3E%3Cpath d='M0 10 Q25 0 50 10 T100 10 V10 H0 Z' fill='%234a7c59'/%3E%3C/svg%3E") repeat-x;
+  background-size: 100px 15px;
 }
 
 .ff-trees-container {
   position: absolute;
-  bottom: 30px;
+  bottom: 35px;
   left: 0;
   right: 0;
-  height: 130px;
+  height: 140px;
 }
 
 .ff-tree {
   position: absolute;
   bottom: 0;
   transform-origin: bottom center;
-  transition: all 0.6s ease-out;
+  transition: all 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 /* Seed Stage */
@@ -48,7 +59,7 @@
 .ff-tree-seed .ff-tree-trunk {
   width: 4px;
   height: 8px;
-  background: #6b4423;
+  background: linear-gradient(to right, #8b5a2b, #6b4423);
   border-radius: 2px;
   margin: 0 auto;
 }
@@ -64,45 +75,47 @@
 }
 
 .ff-tree-sapling .ff-tree-trunk {
-  width: 5px;
-  height: 22px;
-  background: #5a4020;
-  border-radius: 2px;
+  width: 6px;
+  height: 25px;
+  background: linear-gradient(to right, #8b5a2b, #6b4423, #5a3a1a);
+  border-radius: 3px;
   margin: 0 auto;
   position: relative;
 }
 
 .ff-tree-sapling .ff-tree-leaves {
-  width: 26px;
-  height: 30px;
-  border-radius: 50%;
+  width: 30px;
+  height: 35px;
+  border-radius: 50% 50% 50% 50%;
   position: absolute;
-  bottom: 18px;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
+  box-shadow: inset -5px -5px 15px rgba(0,0,0,0.2);
 }
 
 .ff-tree-sapling .ff-tree-leaves-dark {
-  width: 13px;
-  height: 18px;
+  width: 15px;
+  height: 20px;
   border-radius: 50%;
   position: absolute;
-  bottom: 22px;
+  bottom: 25px;
   left: 50%;
   transform: translateX(-30%);
-  opacity: 0.5;
+  opacity: 0.6;
 }
 
 /* Mature Tree Stage */
 .ff-tree-mature {
   transform: scale(1);
+  animation: ff-sway 4s ease-in-out infinite;
 }
 
 .ff-tree-mature .ff-tree-trunk {
-  width: 10px;
-  height: 45px;
-  background: #5a4020;
-  border-radius: 3px;
+  width: 12px;
+  height: 50px;
+  background: linear-gradient(to right, #8b5a2b, #6b4423, #5a3a1a);
+  border-radius: 4px;
   margin: 0 auto;
   position: relative;
 }
@@ -110,87 +123,96 @@
 .ff-tree-mature .ff-tree-trunk::before {
   content: '';
   position: absolute;
-  left: -6px;
-  top: 14px;
-  width: 8px;
-  height: 5px;
-  background: #5a4020;
-  border-radius: 2px;
-  transform: rotate(-25deg);
+  left: -8px;
+  top: 15px;
+  width: 10px;
+  height: 6px;
+  background: #6b4423;
+  border-radius: 3px;
+  transform: rotate(-30deg);
 }
 
 .ff-tree-mature .ff-tree-trunk::after {
   content: '';
   position: absolute;
-  right: -6px;
-  top: 22px;
-  width: 8px;
-  height: 5px;
-  background: #5a4020;
-  border-radius: 2px;
-  transform: rotate(25deg);
+  right: -8px;
+  top: 25px;
+  width: 10px;
+  height: 6px;
+  background: #6b4423;
+  border-radius: 3px;
+  transform: rotate(30deg);
 }
 
 .ff-tree-mature .ff-tree-leaves {
-  width: 52px;
-  height: 60px;
+  width: 60px;
+  height: 70px;
   border-radius: 50% 50% 45% 45%;
   position: absolute;
-  bottom: 36px;
+  bottom: 40px;
   left: 50%;
   transform: translateX(-50%);
+  box-shadow: 
+    inset -10px -10px 30px rgba(0,0,0,0.3),
+    0 5px 15px rgba(0,0,0,0.2);
 }
 
 .ff-tree-mature .ff-tree-leaves-dark {
-  width: 30px;
-  height: 40px;
+  width: 35px;
+  height: 45px;
   border-radius: 50%;
   position: absolute;
-  bottom: 44px;
+  bottom: 50px;
   left: 50%;
   transform: translateX(-20%);
-  opacity: 0.4;
+  opacity: 0.5;
+}
+
+/* Swaying Animation */
+@keyframes ff-sway {
+  0%, 100% { transform: rotate(-1deg); }
+  50% { transform: rotate(1deg); }
 }
 
 /* Stats Bar */
 .ff-stats-bar {
-  position: fixed;
+  position: absolute;
   top: 10px;
   right: 20px;
   display: flex;
-  gap: 12px;
+  gap: 15px;
   align-items: center;
-  background: #2a4a2a;
-  padding: 6px 14px;
-  border-radius: 4px;
-  border: 1px solid #3a5a3a;
+  background: rgba(45, 90, 39, 0.95);
+  padding: 8px 16px;
+  border-radius: 25px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
   pointer-events: auto;
-  cursor: grab;
-  user-select: none;
-  z-index: 2147483647;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255,255,255,0.2);
 }
 
 .ff-timer, .ff-tree-count {
-  color: #c8d8c8;
-  font-size: 13px;
-  font-weight: 500;
-  font-family: 'Courier New', monospace;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
 .ff-toggle-btn {
-  background: #3a5a3a;
-  border: 1px solid #4a6a4a;
-  color: #b8c8b8;
-  padding: 3px 10px;
-  border-radius: 3px;
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 15px;
   cursor: pointer;
-  font-size: 11px;
-  font-weight: 500;
-  font-family: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  transition: all 0.2s;
 }
 
 .ff-toggle-btn:hover {
-  background: #4a6a4a;
+  background: rgba(255,255,255,0.3);
+  transform: scale(1.05);
 }
 
 /* Floating Particles */
@@ -207,9 +229,9 @@
 .ff-particle {
   position: absolute;
   bottom: -20px;
-  font-size: 14px;
+  font-size: 16px;
   animation: ff-float-up linear infinite;
-  opacity: 0.5;
+  opacity: 0.7;
 }
 
 @keyframes ff-float-up {
@@ -218,13 +240,13 @@
     opacity: 0;
   }
   10% {
-    opacity: 0.5;
+    opacity: 0.7;
   }
   90% {
-    opacity: 0.5;
+    opacity: 0.7;
   }
   100% {
-    transform: translateY(-180px) rotate(180deg);
+    transform: translateY(-200px) rotate(360deg);
     opacity: 0;
   }
 }
@@ -232,25 +254,25 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
   #focus-forest-overlay {
-    height: 100px;
+    height: 120px;
   }
   
   .ff-trees-container {
-    height: 70px;
+    height: 80px;
   }
   
   .ff-tree-mature .ff-tree-leaves {
-    width: 36px;
-    height: 44px;
+    width: 40px;
+    height: 50px;
   }
   
   .ff-tree-mature .ff-tree-trunk {
-    width: 7px;
-    height: 30px;
+    width: 8px;
+    height: 35px;
   }
   
   .ff-stats-bar {
-    font-size: 11px;
-    padding: 5px 10px;
+    font-size: 12px;
+    padding: 6px 12px;
   }
 }

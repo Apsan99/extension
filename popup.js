@@ -5,8 +5,7 @@ const BADGE_DEFINITIONS = {
   first_tree: { icon: '🌱', name: 'First Seed', desc: 'Focus for 5 minutes' },
   hour_focus: { icon: '⏰', name: 'Hour Power', desc: 'Focus for 1 hour total' },
   five_hours: { icon: '🧘', name: 'Deep Focus', desc: 'Focus for 5 hours total' },
-  day_streak_3: { icon: '🔥', name: 'Consistent', desc: '3 day streak' },                  //icon idea from Ai---bagde idea is org
-                                                                                        
+  day_streak_3: { icon: '🔥', name: 'Consistent', desc: '3 day streak' },
   day_streak_7: { icon: '⚡', name: 'Week Warrior', desc: '7 day streak' },
   level_5: { icon: '⭐', name: 'Rising Star', desc: 'Reach level 5' },
   level_10: { icon: '👑', name: 'Focus Master', desc: 'Reach level 10' },
@@ -58,10 +57,10 @@ async function loadStats() {
   document.getElementById('forest-today-trees').textContent = treesToday;
   document.getElementById('forest-lifetime-trees').textContent = treesLifetime;
   
-  // Loading badges
+  // Load badges
   loadBadges(stats.lifetime.badges);
   
-  // Loading forest preview
+  // Load forest preview
   loadForestPreview(treesToday);
 }
 
@@ -95,7 +94,7 @@ function loadForestPreview(treeCount) {
   const container = document.getElementById('forest-trees');
   container.innerHTML = '';
   
-  const treeEmojis = ['🌲', '🌳', '🌴', '🎄', '🌿'];                 //used emojies for easy manipulationn
+  const treeEmojis = ['🌲', '🌳', '🌴', '🎄', '🌿'];
   
   for (let i = 0; i < Math.min(treeCount, 30); i++) {
     const tree = document.createElement('span');
@@ -199,7 +198,7 @@ async function addSite() {
   if (!site) return;
   
   // Clean up the URL
-  site = site.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];  //used some regex with help from my high school teacher 
+  site = site.replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
   
   const data = await chrome.storage.local.get('productiveSites');
   const sites = data.productiveSites || [];

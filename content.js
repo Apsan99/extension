@@ -36,7 +36,7 @@ async function init() {
 }
 
 function createForestOverlay() {
- 
+  // Remove existing overlay if any
   const existing = document.getElementById('focus-forest-overlay');
   if (existing) existing.remove();
   
@@ -54,9 +54,6 @@ function createForestOverlay() {
   `;
   
   document.body.appendChild(forestContainer);
-  
-  // Make stats bar draggable New Feature!! 
-  makeStatsDraggable();
   
   // Toggle visibility
   document.getElementById('ff-toggle-overlay').addEventListener('click', () => {
@@ -82,73 +79,6 @@ function createForestOverlay() {
   createParticles();
 }
 
-function makeStatsDraggable() {
-  const statsBar = document.querySelector('.ff-stats-bar');
-  if (!statsBar) return;
-  
-  let isDragging = false;
-  let startX, startY, initialX, initialY;
-  
-  // Load saved position
-  chrome.storage.local.get('statsBarPosition', (data) => {
-    if (data.statsBarPosition) {
-      statsBar.style.top = data.statsBarPosition.top;
-      statsBar.style.right = 'auto';
-      statsBar.style.left = data.statsBarPosition.left;
-    }
-  });
-  
-  statsBar.addEventListener('mousedown', (e) => {
-    if (e.target.tagName === 'BUTTON') return; // Don't drag when clicking buttons
-    isDragging = true;
-    statsBar.style.cursor = 'grabbing';
-    
-    const rect = statsBar.getBoundingClientRect();
-    startX = e.clientX;
-    startY = e.clientY;
-    initialX = rect.left;
-    initialY = rect.top;
-    
-    e.preventDefault();
-  });
-  
-  document.addEventListener('mousemove', (e) => {
-    if (!isDragging) return;
-    
-    const deltaX = e.clientX - startX;
-    const deltaY = e.clientY - startY;
-    
-    let newX = initialX + deltaX;
-    let newY = initialY + deltaY;
-    
-   
-    const maxX = window.innerWidth - statsBar.offsetWidth;
-    const maxY = window.innerHeight - statsBar.offsetHeight;
-    
-    newX = Math.max(0, Math.min(newX, maxX));
-    newY = Math.max(0, Math.min(newY, maxY));
-    
-    statsBar.style.right = 'auto';
-    statsBar.style.left = `${newX}px`;
-    statsBar.style.top = `${newY}px`;
-  });
-  
-  document.addEventListener('mouseup', () => {
-    if (isDragging) {
-      isDragging = false;
-      statsBar.style.cursor = 'grab';
-      
-      // position save
-      chrome.storage.local.set({
-        statsBarPosition: {
-          left: statsBar.style.left,
-          top: statsBar.style.top
-        }
-      });
-    }
-  });
-}
-
 function createParticles() {
   const particlesContainer = document.querySelector('.ff-particles');
   if (!particlesContainer) return;
@@ -167,10 +97,10 @@ function createParticles() {
 function startFocusTracking() {
   focusStartTime = Date.now();
   
-  // Updating timer every second
+  // Update timer every second
   updateInterval = setInterval(updateTimer, 1000);
   
-  //  IT Grow trees every 5 minutes (300 seconds)
+  // Grow trees every 5 minutes (300 seconds)
   growthInterval = setInterval(checkTreeGrowth, 1000);
   
   // Track visibility

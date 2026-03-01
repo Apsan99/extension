@@ -1,3 +1,4 @@
+// Default productive websites
 const DEFAULT_PRODUCTIVE_SITES = [
   'docs.google.com',
   'drive.google.com',
@@ -17,6 +18,7 @@ const DEFAULT_PRODUCTIVE_SITES = [
   'freecodecamp.org',
   'w3schools.com',
   'developer.mozilla.org',
+  'medium.com',
   'wikipedia.org',
   'scholar.google.com',
   'classroom.google.com',
@@ -56,7 +58,7 @@ chrome.runtime.onInstalled.addListener(async () => {
   }
 });
 
-// look  messages from content script and popup
+// Listen for messages from content script and popup
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'checkProductive') {
     checkIfProductive(request.url).then(sendResponse);
@@ -103,7 +105,7 @@ async function updateFocusTime(seconds) {
   
   let dailyStats = data.dailyStats || { date: today, focusTime: 0, trees: [] };
   
-  //if new dayy
+  // Reset daily stats if it's a new day
   if (dailyStats.date !== today) {
     // Check streak
     const lastDate = new Date(lifetimeStats.lastActiveDate);
@@ -127,10 +129,10 @@ async function updateFocusTime(seconds) {
   dailyStats.focusTime += seconds;
   lifetimeStats.lastActiveDate = today;
   
-  //(every 60 minutes = 1 level, starting at level 1)
+  // Calculate level (every 60 minutes = 1 level, starting at level 1)
   lifetimeStats.level = Math.floor(lifetimeStats.totalFocusTime / 3600) + 1;
   
-  // Check for new badges...
+  // Check for new badges
   lifetimeStats.badges = checkBadges(lifetimeStats, dailyStats);
   
   await chrome.storage.local.set({ lifetimeStats, dailyStats });
@@ -144,7 +146,7 @@ function checkBadges(lifetime, daily) {
   const badgeDefinitions = [
     { id: 'first_tree', name: 'First Seed', condition: () => lifetime.totalFocusTime >= 300 },
     { id: 'hour_focus', name: 'Hour Power', condition: () => lifetime.totalFocusTime >= 3600 },
-    { id: 'five_hours', name: 'Deep Focus', condition: () => lifetime.totalFocusTime >= 18000 },      //i took ideas of names from ai
+    { id: 'five_hours', name: 'Deep Focus', condition: () => lifetime.totalFocusTime >= 18000 },
     { id: 'day_streak_3', name: 'Consistent', condition: () => lifetime.currentStreak >= 3 },
     { id: 'day_streak_7', name: 'Week Warrior', condition: () => lifetime.currentStreak >= 7 },
     { id: 'level_5', name: 'Rising Star', condition: () => lifetime.level >= 5 },
@@ -183,6 +185,3 @@ async function getStats() {
     daily: dailyStats
   };
 }
-
-
-//it has been really great working on this project for hackclub

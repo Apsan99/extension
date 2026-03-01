@@ -27,10 +27,31 @@ async function init() {
   isProductive = response.isProductive;
   
   if (isProductive) {
-    const settings = await chrome.storage.local.get('settings');
+    const settings = await chrome.storage.local.get(['settings', 'sessionState']);
     if (settings.settings?.overlayEnabled !== false) {
-      createForestOverlay();
-      startFocusTracking();
+      // Restore session state from storage
+      const session = settings.sessionState;
+      const isStale = session && (Date.now() - session.timestamp > 30 * 60 * 1000);
+      if (session && session.active && !isStale) {
+        totalFocusTime = session.totalFocusTime || 0;
+        trees = [];
+        // Rebuild trees based on count
+        createForestOverlay();
+        for (let i = 0; i < (session.treeCount || 0); i++) {
+          growNewTree();
+          // Mature restored trees immediately
+          if (trees[i]) {
+            trees[i].element.classList.remove('ff-tree-seed', 'ff-tree-sapling');
+            trees[i].element.classList.add('ff-tree-mature');
+            trees[i].stage = 2;
+          }
+        }
+        startFocusTracking();
+      } else {
+        createForestOverlay();
+        startFocusTracking();
+        saveSessionState();
+      }
     }
   }
 }
@@ -55,6 +76,9 @@ function createForestOverlay() {
   
   document.body.appendChild(forestContainer);
   
+  // Make stats bar draggable
+  makeStatsDraggable();
+  
   // Toggle visibility
   document.getElementById('ff-toggle-overlay').addEventListener('click', () => {
     const container = document.querySelector('.ff-trees-container');
@@ -77,6 +101,73 @@ function createForestOverlay() {
   
   // Create initial particles
   createParticles();
+}
+
+function makeStatsDraggable() {
+  const statsBar = document.querySelector('.ff-stats-bar');
+  if (!statsBar) return;
+  
+  let isDragging = false;
+  let startX, startY, initialX, initialY;
+  
+  // Load saved position
+  chrome.storage.local.get('statsBarPosition', (data) => {
+    if (data.statsBarPosition) {
+      statsBar.style.top = data.statsBarPosition.top;
+      statsBar.style.right = 'auto';
+      statsBar.style.left = data.statsBarPosition.left;
+    }
+  });
+  
+  statsBar.addEventListener('mousedown', (e) => {
+    if (e.target.tagName === 'BUTTON') return; // Don't drag when clicking buttons
+    isDragging = true;
+    statsBar.style.cursor = 'grabbing';
+    
+    const rect = statsBar.getBoundingClientRect();
+    startX = e.clientX;
+    startY = e.clientY;
+    initialX = rect.left;
+    initialY = rect.top;
+    
+    e.preventDefault();
+  });
+  
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+    
+    const deltaX = e.clientX - startX;
+    const deltaY = e.clientY - startY;
+    
+    let newX = initialX + deltaX;
+    let newY = initialY + deltaY;
+    
+    // Keep within viewport
+    const maxX = window.innerWidth - statsBar.offsetWidth;
+    const maxY = window.innerHeight - statsBar.offsetHeight;
+    
+    newX = Math.max(0, Math.min(newX, maxX));
+    newY = Math.max(0, Math.min(newY, maxY));
+    
+    statsBar.style.right = 'auto';
+    statsBar.style.left = `${newX}px`;
+    statsBar.style.top = `${newY}px`;
+  });
+  
+  document.addEventListener('mouseup', () => {
+    if (isDragging) {
+      isDragging = false;
+      statsBar.style.cursor = 'grab';
+      
+      // Save position
+      chrome.storage.local.set({
+        statsBarPosition: {
+          left: statsBar.style.left,
+          top: statsBar.style.top
+        }
+      });
+    }
+  });
 }
 
 function createParticles() {
@@ -213,6 +304,18 @@ async function saveFocusTime() {
   });
   
   focusStartTime = Date.now();
+  saveSessionState();
+}
+
+function saveSessionState() {
+  chrome.storage.local.set({
+    sessionState: {
+      active: true,
+      totalFocusTime: totalFocusTime,
+      treeCount: trees.length,
+      timestamp: Date.now()
+    }
+  });
 }
 
 // Save focus time before leaving
